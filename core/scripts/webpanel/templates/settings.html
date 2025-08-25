@@ -1,0 +1,1596 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class='content-header'>
+    <div class='container-fluid'>
+        <div class='row mb-2'>
+            <div class='col-sm-6'>
+                <h1 class='m-0'>Settings</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='content'>
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-lg-12'>
+                <div class='card card-primary card-outline card-tabs'>
+                    <div class='card-header p-0 pt-1 border-bottom-0'>
+                        <ul class='nav nav-pills' id='custom-tabs-three-tab' role='tablist'
+                            style="margin-left: 20px; margin-top: 10px;">
+                            <li class='nav-item'>
+                                <a class='nav-link active' id='subs-tab' data-toggle='pill' href='#subs' role='tab'
+                                    aria-controls='subs' aria-selected='false'><i class="fas fa-link"></i>
+                                    Subscriptions</a>
+                            </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' id='telegram-tab' data-toggle='pill' href='#telegram' role='tab'
+                                    aria-controls='telegram' aria-selected='true'><i class="fab fa-telegram"></i>
+                                    Telegram Bot</a>
+                            </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' id='port-tab' data-toggle='pill' href='#port' role='tab'
+                                    aria-controls='port' aria-selected='false'><i class="fas fa-server"></i> Change
+                                    Port</a>
+                            </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' id='sni-tab' data-toggle='pill' href='#sni' role='tab'
+                                    aria-controls='sni' aria-selected='false'><i class="fas fa-shield-alt"></i> Change
+                                    SNI</a>
+                            </li>
+                             <li class='nav-item'>
+                                <a class='nav-link' id='obfs-tab' data-toggle='pill' href='#obfs' role='tab'
+                                    aria-controls='obfs' aria-selected='false'><i class="fas fa-user-secret"></i>
+                                    OBFS</a>
+                            </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' id='ip-tab' data-toggle='pill' href='#change_ip' role='tab'
+                                    aria-controls='change_ip' aria-selected='false'><i class="fas fa-network-wired"></i>
+                                    IP Management</a>
+                            </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' id='extra-config-tab' data-toggle='pill' href='#extra-config' role='tab'
+                                    aria-controls='extra-config' aria-selected='false'><i class="fas fa-plus-circle"></i>
+                                    Extra Configs</a>
+                            </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' id='backup-tab' data-toggle='pill' href='#backup' role='tab'
+                                    aria-controls='backup' aria-selected='false'><i class="fas fa-download"></i>
+                                    Backup</a>
+                            </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' id='ip-limit-tab' data-toggle='pill' href='#ip-limit' role='tab'
+                                    aria-controls='ip-limit' aria-selected='false'><i class="fas fa-user-slash"></i>
+                                    IP Limit</a>
+                            </li>
+                             <li class='nav-item'>
+                                <a class='nav-link' id='decoy-tab' data-toggle='pill' href='#decoy' role='tab'
+                                    aria-controls='decoy' aria-selected='false'><i class="fas fa-mask"></i>
+                                    Decoy Site</a>
+                            </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' id='warp-tab-link' data-toggle='pill' href='#warp-content' role='tab'
+                                    aria-controls='warp-content' aria-selected='false'><i class="fas fa-cloud"></i> WARP</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class='card-body' style="margin-left: 25px;">
+                        <div class='tab-content' id='custom-tabs-three-tabContent'>
+
+                            <!-- Subscriptions Tab -->
+                            <div class='tab-pane fade show active' id='subs' role='tabpanel' aria-labelledby='subs-tab'>
+                                <ul class='nav nav-tabs' id='subs-tabs' role='tablist'>
+                                    <li class='nav-item'>
+                                        <a class='nav-link active' id='normal-tab' data-toggle='tab' href='#normal' role='tab'
+                                            aria-controls='normal' aria-selected='true'><strong>Service Control</strong></a>
+                                    </li>
+                                    <li class='nav-item normal-sub-config-tab-li' style="display: none;">
+                                        <a class='nav-link' id='normal-sub-config-link-tab' data-toggle='tab' href='#normal-sub-config-content' role='tab'
+                                            aria-controls='normal-sub-config-content' aria-selected='false'><strong>Configure Link</strong></a>
+                                    </li>
+                                </ul>
+                                <div class='tab-content' id='subs-tabs-content'>
+                                     <br>
+                                    <div class='tab-pane fade show active' id='normal' role='tabpanel' aria-labelledby='normal-tab'>
+                                        <form id="normal_sub_service_form">
+                                            <div class='form-group'>
+                                                <label for='normal_domain'>Domain:</label>
+                                                <input type='text' class='form-control' id='normal_domain'
+                                                    placeholder='sub.example.com'>
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid domain (without http:// or https://).
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <label for='normal_port'>Port:</label>
+                                                <input type='text' class='form-control' id='normal_port'
+                                                    placeholder='e.g., 8080'>
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid port number.
+                                                </div>
+                                            </div>
+                                            <button id="normal_start" type='button' class='btn btn-success'>
+                                               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                                Start Service
+                                            </button>
+                                            <button id="normal_stop" type='button' class='btn btn-danger'
+                                                style="display: none;">Stop Service</button>
+                                        </form>
+                                    </div>
+                                    <div class='tab-pane fade' id='normal-sub-config-content' role='tabpanel' aria-labelledby='normal-sub-config-link-tab'>
+                                        <form id="normal_sub_config_form">
+                                            <div class='form-group'>
+                                                <label for='normal_subpath_input'>Subscription Path Segment:</label>
+                                                <input type='text' class='form-control' id='normal_subpath_input'
+                                                    placeholder='e.g., mysub (becomes /mysub/...)'>
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid subpath (alphanumeric characters only, e.g., mysub).
+                                                </div>
+                                            </div>
+                                            <button id="normal_subpath_save_btn" type='button' class='btn btn-primary'>
+                                               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                                Save Subpath
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Telegram Bot Tab -->
+                            <div class='tab-pane fade' id='telegram' role='tabpanel' aria-labelledby='telegram-tab'>
+                                <form id="telegram_form">
+                                    <div class='form-group'>
+                                        <label for='telegram_api_token'>API Token:</label>
+                                        <input type='text' class='form-control' id='telegram_api_token'
+                                            placeholder='Enter API Token'>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid API Token.
+                                        </div>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label for='telegram_admin_id'>Admin ID:</label>
+                                        <input type='text' class='form-control' id='telegram_admin_id'
+                                            placeholder='Enter Admin ID'>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid Admin ID.
+                                        </div>
+                                    </div>
+                                    <button id="telegram_start" type='button' class='btn btn-success'>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>Start</button>
+                                    <button id="telegram_stop" type='button' class='btn btn-danger'
+                                        style="display: none;">Stop</button>
+                                </form>
+                            </div>
+
+                            <!-- Port Tab -->
+                            <div class='tab-pane fade' id='port' role='tabpanel' aria-labelledby='port-tab'>
+                                <form id="port_form">
+                                    <div class='form-group'>
+                                        <label for='hysteria_port'>Port:</label>
+                                        <input type='text' class='form-control' id='hysteria_port'
+                                            placeholder='Enter Port'>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid port number.
+                                        </div>
+                                    </div>
+                                    <button id="port_change" type='button' class='btn btn-primary'>Save</button>
+                                </form>
+                            </div>
+
+                            <!-- SNI Tab -->
+                            <div class='tab-pane fade' id='sni' role='tabpanel' aria-labelledby='sni-tab'>
+                                <form id="sni_form">
+                                    <div class='form-group'>
+                                        <label for='sni_domain'>Domain:</label>
+                                        <input type='text' class='form-control' id='sni_domain'
+                                            placeholder='Enter Domain'>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid domain (without http:// or https://).
+                                        </div>
+                                    </div>
+                                    <button id="sni_change" type='button' class='btn btn-primary'>Save</button>
+                                </form>
+                            </div>
+
+                             <!-- OBFS Tab -->
+                            <div class='tab-pane fade' id='obfs' role='tabpanel' aria-labelledby='obfs-tab'>
+                                <div class="mb-3">
+                                    <h5>OBFS Status</h5>
+                                    <div id="obfs_status_container" class="p-3 border rounded">
+                                        <span id="obfs_status_message">Loading OBFS status...</span>
+                                    </div>
+                                </div>
+                                <button id="obfs_enable_btn" type='button' class='btn btn-success' style="display: none;">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                    Enable OBFS
+                                </button>
+                                <button id="obfs_disable_btn" type='button' class='btn btn-danger' style="display: none;">
+                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                    Disable OBFS
+                                </button>
+                            </div>
+
+                            <!-- IP Management Tab -->
+                            <div class='tab-pane fade' id='change_ip' role='tabpanel' aria-labelledby='ip-tab'>
+                                <div class="card card-outline card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Local Server IP / Domain</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="change_ip_form">
+                                            <div class='form-group'>
+                                                <label for='ipv4'>IPv4 / Domain:</label>
+                                                <input type='text' class='form-control' id='ipv4' placeholder='Enter IPv4 or Domain' value="{{ ipv4 or '' }}">
+                                                <div class="invalid-feedback">Please enter a valid IPv4 address or Domain.</div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <label for='ipv6'>IPv6 / Domain:</label>
+                                                <input type='text' class='form-control' id='ipv6' placeholder='Enter IPv6 or Domain' value="{{ ipv6 or '' }}">
+                                                <div class="invalid-feedback">Please enter a valid IPv6 address or Domain.</div>
+                                            </div>
+                                            <button id="ip_change" type='button' class='btn btn-primary'>Save</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            
+                                <div class="card card-outline card-secondary mt-4">
+                                    <div class="card-header">
+                                        <h3 class="card-title">External Nodes</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-striped" id="nodes_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Node Name</th>
+                                                        <th>IP Address / Domain</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                        <div id="no_nodes_message" class="alert alert-info" style="display: none;">
+                                            No external nodes have been configured.
+                                        </div>
+                            
+                                        <hr>
+                                        <h5>Add New Node</h5>
+                                        <form id="add_node_form" class="form-inline">
+                                            <div class="form-group mb-2 mr-sm-2">
+                                                <label for="node_name" class="sr-only">Node Name</label>
+                                                <input type="text" class="form-control" id="node_name" placeholder="e.g., Node-US">
+                                                <div class="invalid-feedback">Please enter a name.</div>
+                                            </div>
+                                            <div class="form-group mb-2 mr-sm-2">
+                                                <label for="node_ip" class="sr-only">IP Address / Domain</label>
+                                                <input type="text" class="form-control" id="node_ip" placeholder="e.g., node.example.com">
+                                                <div class="invalid-feedback">Please enter a valid IP or domain.</div>
+                                            </div>
+                                            <button type="button" id="add_node_btn" class="btn btn-success mb-2">
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                                Add Node
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Extra Configs Tab -->
+                            <div class='tab-pane fade' id='extra-config' role='tabpanel' aria-labelledby='extra-config-tab'>
+                                <div class="card card-outline card-info">
+                                    <div class="card-header">
+                                        <h3 class="card-title">External Proxy Configurations for Subscriptions</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Add external proxy links (Vmess, Vless, SS, Trojan) to be included in all users' subscription links.</p>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-striped" id="extra_configs_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>URI</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                        <div id="no_extra_configs_message" class="alert alert-info" style="display: none;">
+                                            No external configurations have been added yet.
+                                        </div>
+                            
+                                        <hr>
+                                        <h5>Add New Configuration</h5>
+                                        <form id="add_extra_config_form" class="form-inline">
+                                            <div class="form-group mb-2 mr-sm-2">
+                                                <label for="extra_config_name" class="sr-only">Name</label>
+                                                <input type="text" class="form-control" id="extra_config_name" placeholder="e.g., My-Vmess-Link">
+                                                <div class="invalid-feedback">Please enter a unique name.</div>
+                                            </div>
+                                            <div class="form-group mb-2 mr-sm-2 flex-grow-1">
+                                                <label for="extra_config_uri" class="sr-only">URI</label>
+                                                <input type="text" class="form-control w-100" id="extra_config_uri" placeholder="vmess://...">
+                                                <div class="invalid-feedback">URI must start with vmess://, vless://, ss://, or trojan://.</div>
+                                            </div>
+                                            <button type="button" id="add_extra_config_btn" class="btn btn-success mb-2">
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                                Add Config
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Backup Tab -->
+                            <div class='tab-pane fade' id='backup' role='tabpanel' aria-labelledby='backup-tab'>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card card-outline card-success h-100">
+                                            <div class="card-header">
+                                                <h3 class="card-title"><i class="fas fa-upload"></i> Restore from Backup</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>Upload a previously downloaded .zip backup file to restore your panel settings and Hysteria configuration.</p>
+                                                <div class="form-group">
+                                                     <label for="backup_file">Select Backup File (.zip):</label>
+                                                     <input type="file" class="form-control-file" id="backup_file" accept=".zip">
+                                                </div>
+                                                <button id="upload_backup" type='button' class='btn btn-success btn-block'>
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                                    Upload and Restore
+                                                </button>
+                                                <div class="progress mt-3" style="display: none;">
+                                                  <div id="backup_progress_bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                                </div>
+                                               <div id="backup_status" class="mt-2 small"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card card-outline card-primary h-100">
+                                            <div class="card-header">
+                                                <h3 class="card-title"><i class="fas fa-download"></i> Create New Backup</h3>
+                                            </div>
+                                            <div class="card-body d-flex flex-column justify-content-center">
+                                                <p>Download a .zip file containing a full backup of your panel settings and Hysteria configuration.</p>
+                                                <button id="download_backup" type='button' class='btn btn-primary btn-block mt-auto'>Download Backup</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- IP Limit Tab -->
+                            <div class='tab-pane fade' id='ip-limit' role='tabpanel' aria-labelledby='ip-limit-tab'>
+                                <ul class='nav nav-tabs' id='ip-limit-tabs' role='tablist'>
+                                    <li class='nav-item'>
+                                        <a class='nav-link active' id='ip-limit-service-tab' data-toggle='tab' href='#ip-limit-service'
+                                            role='tab' aria-controls='ip-limit-service'
+                                            aria-selected='true'><strong>Service Control</strong></a>
+                                    </li>
+                                    <li class='nav-item ip-limit-config-tab-li' style="display: none;">
+                                        <a class='nav-link' id='ip-limit-config-tab' data-toggle='tab' href='#ip-limit-config-content' role='tab'
+                                            aria-controls='ip-limit-config-content' aria-selected='false'><strong>Configuration</strong></a>
+                                    </li>
+                                </ul>
+                                <div class='tab-content' id='ip-limit-tabs-content'>
+                                    <br>
+                                    <!-- IP Limit Service Control Sub Tab -->
+                                    <div class='tab-pane fade show active' id='ip-limit-service' role='tabpanel'
+                                        aria-labelledby='ip-limit-service-tab'>
+                                        <form id="ip_limit_service_form">
+                                            <button id="ip_limit_start" type='button' class='btn btn-success'>
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                                Start
+                                            </button>
+                                            <button id="ip_limit_stop" type='button' class='btn btn-danger' style="display: none;">Stop</button>
+                                        </form>
+                                    </div>
+
+                                    <!-- IP Limit Configuration Sub Tab -->
+                                    <div class='tab-pane fade' id='ip-limit-config-content' role='tabpanel' aria-labelledby='ip-limit-config-tab'>
+                                        <form id="ip_limit_config_form">
+                                            <div class='form-group'>
+                                                <label for='block_duration'>Block Duration (seconds):</label>
+                                                <input type='text' class='form-control' id='block_duration'
+                                                    placeholder='Enter Block Duration' value="">
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid positive number for block duration.
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <label for='max_ips'>Max IPs per User:</label>
+                                                <input type='text' class='form-control' id='max_ips'
+                                                    placeholder='Enter Max IPs per User' value="">
+                                                <div class="invalid-feedback">
+                                                    Please enter a valid positive number for max IPs.
+                                                </div>
+                                            </div>
+                                            <button id="ip_limit_change_config" type='button' class='btn btn-primary'>Save Configuration</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                             <!-- Decoy Site Tab -->
+                            <div class='tab-pane fade' id='decoy' role='tabpanel' aria-labelledby='decoy-tab'>
+                                <form id="decoy_form">
+                                    <div class='form-group'>
+                                        <label for='decoy_domain'>Domain:</label>
+                                        <input type='text' class='form-control' id='decoy_domain'
+                                            placeholder='Enter Domain'>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid domain (without http:// or https://).
+                                        </div>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label for='decoy_path'>Decoy Site Path:</label>
+                                        <input type='text' class='form-control' id='decoy_path'
+                                            placeholder='Enter Path to Decoy Site Files'>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid directory path.
+                                        </div>
+                                    </div>
+                                    <button id="decoy_setup" type='button' class='btn btn-success'>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                        Setup Decoy
+                                    </button>
+                                    <button id="decoy_stop" type='button' class='btn btn-danger' style="display: none;">Stop Decoy</button>
+                                </form>
+
+                                <div class="mt-4">
+                                    <h5>Decoy Status</h5>
+                                    <div id="decoy_status_container" class="p-3 border rounded">
+                                        <div id="decoy_status_message">Loading status...</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- WARP Tab -->
+                            <div class='tab-pane fade' id='warp-content' role='tabpanel' aria-labelledby='warp-tab-link'>
+                                <div id="warp_initial_controls">
+                                    <div class='alert alert-info'>WARP service is not active.</div>
+                                    <button id="warp_start_btn" type='button' class='btn btn-success mt-3'>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                        Install & Start WARP
+                                    </button>
+                                </div>
+
+                                <div id="warp_active_controls" style="display: none;">
+                                     <div class='alert alert-success mb-3'>WARP service is active.</div>
+
+                                    <div class="card card-outline card-secondary">
+                                        <div class="card-header">
+                                            <h3 class="card-title"><i class="fas fa-cogs"></i> WARP Routing Configuration</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <form id="warp_config_form">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="warp_all_traffic">
+                                                        <label class="custom-control-label" for="warp_all_traffic">Route All Traffic through WARP</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="warp_popular_sites">
+                                                        <label class="custom-control-label" for="warp_popular_sites">Route Popular Sites through WARP</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="warp_domestic_sites">
+                                                        <label class="custom-control-label" for="warp_domestic_sites">Route Domestic Sites through WARP</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="warp_block_adult_sites">
+                                                        <label class="custom-control-label" for="warp_block_adult_sites">Block Adult Sites (WARP Family DNS)</label>
+                                                    </div>
+                                                </div>
+                                                <button id="warp_save_config_btn" type='button' class='btn btn-primary'>
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                                    Save Configuration
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <button id="warp_stop_btn" type='button' class='btn btn-danger mt-3'>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                        Stop & Uninstall WARP
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+    integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEA/3apsIOPr7/l+jCMq9Dn9x5qyuAGqgpr4/NBZ95p8yrl/sLhJvoazg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    $(document).ready(function () {
+
+        initUI();
+        fetchDecoyStatus();
+        fetchObfsStatus();
+        fetchNodes();
+        fetchExtraConfigs();
+
+        function escapeHtml(text) {
+          var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+          };
+          if (text === null || typeof text === 'undefined') {
+            return '';
+          }
+          return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+        
+        function isValidURI(uri) {
+            if (!uri) return false;
+            const lowerUri = uri.toLowerCase();
+            return lowerUri.startsWith("vmess://") || lowerUri.startsWith("vless://") || lowerUri.startsWith("ss://") || lowerUri.startsWith("trojan://");
+        }
+
+        function isValidPath(path) {
+            if (!path) return false;
+            return path.trim() !== '';
+        }
+
+        function isValidDomain(domain) {
+            if (!domain) return false;
+            const lowerDomain = domain.toLowerCase();
+            return !lowerDomain.startsWith("http://") && !lowerDomain.startsWith("https://");
+        }
+
+        function isValidPort(port) {
+            if (!port) return false;
+            return /^[0-9]+$/.test(port) && parseInt(port) > 0 && parseInt(port) <= 65535;
+        }
+
+        function isValidSubPath(subpath) {
+            if (!subpath) return false;
+            return /^[a-zA-Z0-9]+$/.test(subpath);
+        }
+
+        function isValidIPorDomain(input) {
+            if (input === null || typeof input === 'undefined') return false;
+            input = input.trim();
+            if (input === '') return false;
+        
+            const ipV4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+            const ipV6Regex = /^(([0-9a-fA-F]{1,4}:){7,7}([0-9a-fA-F]{1,4}|:)|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
+            const domainRegex = /^(?!-)(?:[a-zA-Z\d-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+$)[a-zA-Z\d]{1,63}$/;
+            const lowerInput = input.toLowerCase();
+
+            return ipV4Regex.test(input) || ipV6Regex.test(input) || domainRegex.test(lowerInput);
+        }
+
+        function isValidPositiveNumber(value) {
+            if (!value) return false;
+            return /^[0-9]+$/.test(value) && parseInt(value) > 0;
+        }
+
+        function confirmAction(actionName, callback) {
+            Swal.fire({
+                title: `Are you sure?`,
+                text: `Do you really want to ${actionName}?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, proceed!",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    callback();
+                }
+            });
+        }
+
+        function sendRequest(url, type, data, successMessage, buttonSelector, showReload = true, postSuccessCallback = null) {
+            $.ajax({
+                url: url,
+                type: type,
+                contentType: "application/json",
+                data: data ? JSON.stringify(data) : null,
+                beforeSend: function() {
+                    if (buttonSelector) {
+                        $(buttonSelector).prop('disabled', true);
+                         $(buttonSelector + ' .spinner-border').show();
+                    }
+                },
+                success: function (response) {
+                    Swal.fire("Success!", successMessage, "success").then(() => {
+                        if (showReload) {
+                            location.reload();
+                        } else {
+                            if (postSuccessCallback) {
+                                postSuccessCallback(response);
+                            }
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    let errorMessage = "An unexpected error occurred.";
+                    if (xhr.responseJSON && xhr.responseJSON.detail) {
+                        const detail = xhr.responseJSON.detail;
+                        if (Array.isArray(detail)) {
+                            errorMessage = detail.map(err => `Error in '${err.loc[1]}': ${err.msg}`).join('\n');
+                        } else if (typeof detail === 'string') {
+                            let userMessage = detail;
+                            const failMarker = 'failed with exit code';
+                            const markerIndex = detail.indexOf(failMarker);
+                            if (markerIndex > -1) {
+                                const colonIndex = detail.indexOf(':', markerIndex);
+                                if (colonIndex > -1) {
+                                    userMessage = detail.substring(colonIndex + 1).trim();
+                                }
+                            }
+                            errorMessage = userMessage;
+                        }
+                    }
+                    Swal.fire("Error!", errorMessage, "error");
+                    console.error("AJAX Error:", status, error, xhr.responseText);
+                },
+                complete: function() {
+                    if (buttonSelector) {
+                        $(buttonSelector).prop('disabled', false);
+                        $(buttonSelector + ' .spinner-border').hide();
+                    }
+                }
+            });
+        }
+
+        function validateForm(formId) {
+            let isValid = true;
+            $(`#${formId} .form-control`).each(function () {
+                const input = $(this);
+                const id = input.attr('id');
+                let fieldValid = true;
+
+                if (id === 'normal_domain' || id === 'sni_domain' || id === 'decoy_domain') {
+                    fieldValid = isValidDomain(input.val());
+                } else if (id === 'normal_port' || id === 'hysteria_port') {
+                    fieldValid = isValidPort(input.val());
+                } else if (id === 'normal_subpath_input') {
+                    fieldValid = isValidSubPath(input.val());
+                } else if (id === 'ipv4' || id === 'ipv6') {
+                    fieldValid = (input.val().trim() === '') ? true : isValidIPorDomain(input.val());
+                } else if (id === 'node_ip') {
+                    fieldValid = isValidIPorDomain(input.val());
+                } else if (id === 'node_name' || id === 'extra_config_name') {
+                    fieldValid = input.val().trim() !== "";
+                } else if (id === 'extra_config_uri') {
+                    fieldValid = isValidURI(input.val());
+                } else if (id === 'block_duration' || id === 'max_ips') {
+                    fieldValid = isValidPositiveNumber(input.val());
+                } else if (id === 'decoy_path') {
+                    fieldValid = isValidPath(input.val());
+                } else {
+                    if (input.attr('placeholder') && input.attr('placeholder').includes('Enter') && !input.attr('id').startsWith('ipv')) {
+                         fieldValid = input.val().trim() !== "";
+                    }
+                }
+
+                if (!fieldValid) {
+                    input.addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    input.removeClass('is-invalid');
+                }
+            });
+            return isValid;
+        }
+
+        function initUI() {
+            $.ajax({
+                url: "{{ url_for('server_services_status_api') }}",
+                type: "GET",
+                success: function (data) {
+                    updateServiceUI(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to fetch service status:", error, xhr.responseText);
+                     Swal.fire("Error!", "Could not fetch service statuses.", "error");
+                }
+            });
+
+             $.ajax({
+                url: "{{ url_for('get_ip_api') }}",
+                type: "GET",
+                success: function (data) {
+                    $("#ipv4").val(data.ipv4 || "");
+                    $("#ipv6").val(data.ipv6 || "");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to fetch IP addresses:", error, xhr.responseText);
+                }
+            });
+
+            $.ajax({
+                url: "{{ url_for('get_port_api') }}",
+                type: "GET",
+                success: function (data) {
+                    $("#hysteria_port").val(data.port || "");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to fetch port:", error, xhr.responseText);
+                }
+            });
+
+            $.ajax({
+                url: "{{ url_for('get_sni_api') }}",
+                type: "GET",
+                success: function (data) {
+                    $("#sni_domain").val(data.sni || "");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to fetch SNI domain:", error, xhr.responseText);
+                }
+            });
+        }
+        
+        function fetchNodes() {
+            $.ajax({
+                url: "{{ url_for('get_all_nodes') }}",
+                type: "GET",
+                success: function (nodes) {
+                    renderNodes(nodes);
+                },
+                error: function(xhr) {
+                    Swal.fire("Error!", "Failed to fetch external nodes list.", "error");
+                    console.error("Error fetching nodes:", xhr.responseText);
+                }
+            });
+        }
+        
+        function renderNodes(nodes) {
+            const tableBody = $("#nodes_table tbody");
+            tableBody.empty();
+        
+            if (nodes && nodes.length > 0) {
+                $("#nodes_table").show();
+                $("#no_nodes_message").hide();
+                nodes.forEach(node => {
+                    const row = `<tr>
+                                    <td>${escapeHtml(node.name)}</td>
+                                    <td>${escapeHtml(node.ip)}</td>
+                                    <td>
+                                        <button class="btn btn-xs btn-danger delete-node-btn" data-name="${escapeHtml(node.name)}">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>`;
+                    tableBody.append(row);
+                });
+            } else {
+                $("#nodes_table").hide();
+                $("#no_nodes_message").show();
+            }
+        }
+        
+        function addNode() {
+            if (!validateForm('add_node_form')) return;
+        
+            const name = $("#node_name").val().trim();
+            const ip = $("#node_ip").val().trim();
+        
+            confirmAction(`add the node '${name}'`, function () {
+                sendRequest(
+                    "{{ url_for('add_node') }}",
+                    "POST",
+                    { name: name, ip: ip },
+                    `Node '${name}' added successfully!`,
+                    "#add_node_btn",
+                    false,
+                    function() {
+                        $("#node_name").val('');
+                        $("#node_ip").val('');
+                        $("#add_node_form .form-control").removeClass('is-invalid');
+                        fetchNodes();
+                    }
+                );
+            });
+        }
+        
+        function deleteNode(nodeName) {
+             confirmAction(`delete the node '${nodeName}'`, function () {
+                sendRequest(
+                    "{{ url_for('delete_node') }}",
+                    "POST",
+                    { name: nodeName },
+                    `Node '${nodeName}' deleted successfully!`,
+                    null,
+                    false,
+                    fetchNodes
+                );
+            });
+        }
+
+        function fetchExtraConfigs() {
+            $.ajax({
+                url: "{{ url_for('get_all_extra_configs') }}",
+                type: "GET",
+                success: function (configs) {
+                    renderExtraConfigs(configs);
+                },
+                error: function(xhr) {
+                    Swal.fire("Error!", "Failed to fetch extra configurations.", "error");
+                    console.error("Error fetching extra configs:", xhr.responseText);
+                }
+            });
+        }
+        
+        function renderExtraConfigs(configs) {
+            const tableBody = $("#extra_configs_table tbody");
+            tableBody.empty();
+        
+            if (configs && configs.length > 0) {
+                $("#extra_configs_table").show();
+                $("#no_extra_configs_message").hide();
+                configs.forEach(config => {
+                    const shortUri = config.uri.length > 50 ? config.uri.substring(0, 50) + '...' : config.uri;
+                    const row = `<tr>
+                                    <td>${escapeHtml(config.name)}</td>
+                                    <td title="${escapeHtml(config.uri)}">${escapeHtml(shortUri)}</td>
+                                    <td>
+                                        <button class="btn btn-xs btn-danger delete-extra-config-btn" data-name="${escapeHtml(config.name)}">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>`;
+                    tableBody.append(row);
+                });
+            } else {
+                $("#extra_configs_table").hide();
+                $("#no_extra_configs_message").show();
+            }
+        }
+        
+        function addExtraConfig() {
+            if (!validateForm('add_extra_config_form')) return;
+        
+            const name = $("#extra_config_name").val().trim();
+            const uri = $("#extra_config_uri").val().trim();
+        
+            confirmAction(`add the configuration '${name}'`, function () {
+                sendRequest(
+                    "{{ url_for('add_extra_config') }}",
+                    "POST",
+                    { name: name, uri: uri },
+                    `Configuration '${name}' added successfully!`,
+                    "#add_extra_config_btn",
+                    false,
+                    function() {
+                        $("#extra_config_name").val('');
+                        $("#extra_config_uri").val('');
+                        $("#add_extra_config_form .form-control").removeClass('is-invalid');
+                        fetchExtraConfigs();
+                    }
+                );
+            });
+        }
+        
+        function deleteExtraConfig(configName) {
+             confirmAction(`delete the configuration '${configName}'`, function () {
+                sendRequest(
+                    "{{ url_for('delete_extra_config') }}",
+                    "POST",
+                    { name: configName },
+                    `Configuration '${configName}' deleted successfully!`,
+                    null,
+                    false,
+                    fetchExtraConfigs
+                );
+            });
+        }
+
+        function updateServiceUI(data) {
+             const servicesMap = {
+                "hysteria_telegram_bot": "#telegram_form",
+                "hysteria_normal_sub": "#normal_sub_service_form",
+                "hysteria_iplimit": "#ip-limit-service",
+                "hysteria_warp": "#warp_service" 
+            };
+
+            Object.keys(servicesMap).forEach(serviceKey => {
+                let targetSelector = servicesMap[serviceKey];
+                let isRunning = data[serviceKey];
+
+                if (serviceKey === "hysteria_normal_sub") {
+                    const $normalForm = $("#normal_sub_service_form");
+                    const $normalFormGroups = $normalForm.find(".form-group");
+                    const $normalStartBtn = $("#normal_start");
+                    const $normalStopBtn = $("#normal_stop");
+                    const $normalSubConfigTabLi = $(".normal-sub-config-tab-li");
+
+                    if (isRunning) {
+                        $normalFormGroups.hide();
+                        $normalStartBtn.hide();
+                        $normalStopBtn.show();
+                        if ($normalForm.find(".alert-info").length === 0) {
+                            $normalForm.prepend(`<div class='alert alert-info'>NormalSub service is running. You can stop it or configure its subpath.</div>`);
+                        }
+                        $normalSubConfigTabLi.show();
+                        fetchNormalSubPath();
+                    } else {
+                        $normalFormGroups.show();
+                        $normalStartBtn.show();
+                        $normalStopBtn.hide();
+                        $normalForm.find(".alert-info").remove();
+                        $normalSubConfigTabLi.hide();
+                        if ($('#normal-sub-config-link-tab').hasClass('active')) {
+                            $('#normal-tab').tab('show');
+                        }
+                        $("#normal_subpath_input").val(""); 
+                        $("#normal_subpath_input").removeClass('is-invalid');
+                    }
+                } else if (serviceKey === "hysteria_iplimit") {
+                    const $ipLimitServiceForm = $("#ip_limit_service_form");
+                    const $configTabLi = $(".ip-limit-config-tab-li");
+                    if (isRunning) {
+                       $("#ip_limit_start").hide();
+                       $("#ip_limit_stop").show();
+                       $configTabLi.show();
+                       fetchIpLimitConfig();
+                       if ($ipLimitServiceForm.find(".alert-info").length === 0) {
+                           $ipLimitServiceForm.prepend(`<div class='alert alert-info'>IP-Limit service is running. You can stop it if needed.</div>`);
+                       }
+                    } else {
+                       $("#ip_limit_start").show();
+                       $("#ip_limit_stop").hide();
+                       $configTabLi.hide();
+                       if ($('#ip-limit-config-tab').hasClass('active')) {
+                           $('#ip-limit-service-tab').tab('show');
+                       }
+                       $ipLimitServiceForm.find(".alert-info").remove();
+                       $("#block_duration").val("");
+                       $("#max_ips").val("");
+                       $("#block_duration, #max_ips").removeClass('is-invalid');
+                    }
+                } else if (serviceKey === "hysteria_warp") {
+                    const isWarpServiceRunning = data[serviceKey]; 
+                    if (isWarpServiceRunning) {
+                        $("#warp_initial_controls").hide();
+                        $("#warp_active_controls").show();
+                        fetchWarpFullStatusAndConfig();
+                    } else {
+                        $("#warp_initial_controls").show();
+                        $("#warp_active_controls").hide();
+                        if ($("#warp_config_form").length > 0) {
+                           $("#warp_config_form")[0].reset();
+                        }
+                    }
+                } else {
+                    const $formSelector = $(targetSelector);
+                    if ($formSelector.length > 0) {
+                        if (isRunning) {
+                            $formSelector.find(".form-group").hide();
+                            $formSelector.find(".btn-success").hide();
+                            $formSelector.find(".btn-danger").show();
+                            if ($formSelector.find(".alert-info").length === 0) { 
+                               $formSelector.prepend(`<div class='alert alert-info'>Service is running. You can stop it if needed.</div>`);
+                            }
+                        } else {
+                            $formSelector.find(".form-group").show();
+                            $formSelector.find(".btn-success").show();
+                            $formSelector.find(".btn-danger").hide();
+                            $formSelector.find(".alert-info").remove();
+                        }
+                    }
+                }
+            });
+        }
+
+        function fetchNormalSubPath() {
+            $.ajax({
+                url: "{{ url_for('normal_sub_get_subpath_api') }}",
+                type: "GET",
+                success: function (data) {
+                    $("#normal_subpath_input").val(data.subpath || "");
+                    if (data.subpath) { 
+                        $("#normal_subpath_input").removeClass('is-invalid');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to fetch NormalSub subpath:", error, xhr.responseText);
+                    $("#normal_subpath_input").val("");
+                }
+            });
+        }
+
+        function fetchIpLimitConfig() {
+            $.ajax({
+                url: "{{ url_for('get_ip_limit_config_api') }}",
+                type: "GET",
+                success: function (data) {
+                    $("#block_duration").val(data.block_duration || "");
+                    $("#max_ips").val(data.max_ips || "");
+                    if (data.block_duration) $("#block_duration").removeClass('is-invalid');
+                    if (data.max_ips) $("#max_ips").removeClass('is-invalid');
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to fetch IP Limit config:", error, xhr.responseText);
+                    $("#block_duration").val("");
+                    $("#max_ips").val("");
+                }
+            });
+        }
+
+        function editNormalSubPath() {
+            if (!validateForm('normal_sub_config_form')) return;
+            const subpath = $("#normal_subpath_input").val();
+
+            confirmAction("change the NormalSub subpath to '" + subpath + "'", function () {
+                sendRequest(
+                    "{{ url_for('normal_sub_edit_subpath_api') }}",
+                    "PUT",
+                    { subpath: subpath },
+                    "NormalSub subpath updated successfully!",
+                    "#normal_subpath_save_btn",
+                    false, 
+                    fetchNormalSubPath 
+                );
+            });
+        }
+
+        function setupDecoy() {
+            if (!validateForm('decoy_form')) return;
+            const domain = $("#decoy_domain").val();
+            const path = $("#decoy_path").val();
+            confirmAction("set up the decoy site", function () {
+                sendRequest(
+                    "{{ url_for('setup_decoy_api') }}",
+                    "POST",
+                    { domain: domain, decoy_path: path },
+                    "Decoy site setup initiated successfully!",
+                    "#decoy_setup",
+                    false,
+                    function() { setTimeout(fetchDecoyStatus, 1000); }
+                );
+            });
+        }
+
+        function stopDecoy() {
+            confirmAction("stop the decoy site", function () {
+                sendRequest(
+                    "{{ url_for('stop_decoy_api') }}",
+                    "POST",
+                    null,
+                    "Decoy site stop initiated successfully!",
+                    "#decoy_stop",
+                    false,
+                    function() { setTimeout(fetchDecoyStatus, 1000); } 
+                );
+            });
+        }
+
+        function fetchDecoyStatus() {
+            $.ajax({
+                url: "{{ url_for('get_decoy_status_api') }}",
+                type: "GET",
+                success: function (data) {
+                    updateDecoyStatusUI(data);
+                },
+                error: function (xhr, status, error) {
+                    $("#decoy_status_message").html('<div class="alert alert-danger">Failed to fetch decoy status.</div>');
+                    console.error("Failed to fetch decoy status:", error, xhr.responseText);
+                }
+            });
+        }
+
+        function updateDecoyStatusUI(data) {
+            const $form = $("#decoy_form");
+            const $formGroups = $form.find(".form-group");
+            const $setupBtn = $("#decoy_setup");
+            const $stopBtn = $("#decoy_stop");
+            const $alertInfo = $form.find(".alert-info");
+
+            if (data.active) {
+                $formGroups.hide();
+                $setupBtn.hide();
+                $stopBtn.show();
+                if ($alertInfo.length === 0) {
+                    $form.prepend(`<div class='alert alert-info'>Decoy site is running. You can stop it if needed.</div>`);
+                } else {
+                    $alertInfo.text('Decoy site is running. You can stop it if needed.');
+                }
+                $("#decoy_status_message").html(`
+                    <strong>Status:</strong> <span class="text-success">Active</span><br>
+                    <strong>Path:</strong> ${data.path || 'N/A'}
+                `);
+            } else {
+                $formGroups.show();
+                $setupBtn.show();
+                $stopBtn.hide();
+                $alertInfo.remove();
+                $("#decoy_status_message").html('<strong>Status:</strong> <span class="text-danger">Not Active</span>');
+            }
+        }
+
+        function fetchObfsStatus() {
+            $.ajax({
+                url: "{{ url_for('check_obfs') }}", 
+                type: "GET",
+                success: function (data) {
+                    updateObfsUI(data.obfs);
+                },
+                error: function (xhr, status, error) {
+                    $("#obfs_status_message").html('<span class="text-danger">Failed to fetch OBFS status.</span>');
+                    console.error("Failed to fetch OBFS status:", error, xhr.responseText);
+                     $("#obfs_enable_btn").hide();
+                    $("#obfs_disable_btn").hide();
+                }
+            });
+        }
+
+        function updateObfsUI(statusMessage) {
+            $("#obfs_status_message").text(statusMessage);
+            if (statusMessage === "OBFS is active.") {
+                $("#obfs_enable_btn").hide();
+                $("#obfs_disable_btn").show();
+                $("#obfs_status_container").removeClass("border-danger border-warning alert-danger alert-warning").addClass("border-success alert-success");
+            } else if (statusMessage === "OBFS is not active.") {
+                $("#obfs_enable_btn").show();
+                $("#obfs_disable_btn").hide();
+                $("#obfs_status_container").removeClass("border-success border-danger alert-success alert-danger").addClass("border-warning alert-warning");
+            } else {
+                $("#obfs_enable_btn").hide();
+                $("#obfs_disable_btn").hide();
+                $("#obfs_status_container").removeClass("border-success border-warning alert-success alert-warning").addClass("border-danger alert-danger");
+            }
+        }
+
+        function enableObfs() {
+            confirmAction("enable OBFS", function () {
+                sendRequest(
+                    "{{ url_for('enable_obfs') }}",
+                    "GET",
+                    null,
+                    "OBFS enabled successfully!",
+                    "#obfs_enable_btn",
+                    false, 
+                    fetchObfsStatus 
+                );
+            });
+        }
+
+        function disableObfs() {
+            confirmAction("disable OBFS", function () {
+                sendRequest(
+                    "{{ url_for('disable_obfs') }}",
+                    "GET",
+                    null,
+                    "OBFS disabled successfully!",
+                    "#obfs_disable_btn",
+                    false, 
+                    fetchObfsStatus 
+                );
+            });
+        }
+
+        function startTelegram() {
+            if (!validateForm('telegram_form')) return;
+            const apiToken = $("#telegram_api_token").val();
+            const adminId = $("#telegram_admin_id").val();
+            confirmAction("start the Telegram bot", function () {
+                sendRequest(
+                    "{{ url_for('telegram_start_api') }}",
+                    "POST",
+                    { token: apiToken, admin_id: adminId },
+                    "Telegram bot started successfully!",
+                    "#telegram_start"
+                );
+            });
+        }
+
+        function stopTelegram() {
+            confirmAction("stop the Telegram bot", function () {
+                sendRequest(
+                    "{{ url_for('telegram_stop_api') }}",
+                    "DELETE",
+                    null,
+                    "Telegram bot stopped successfully!",
+                    "#telegram_stop"
+                );
+            });
+        }
+
+        function startNormal() {
+            if (!validateForm('normal_sub_service_form')) return;
+            const domain = $("#normal_domain").val();
+            const port = $("#normal_port").val();
+            confirmAction("start the normal subscription", function () {
+                sendRequest(
+                    "{{ url_for('normal_sub_start_api') }}",
+                    "POST",
+                    { domain: domain, port: port },
+                    "Normal subscription started successfully!",
+                    "#normal_start"
+                );
+            });
+        }
+
+        function stopNormal() {
+            confirmAction("stop the normal subscription", function () {
+                sendRequest(
+                    "{{ url_for('normal_sub_stop_api') }}",
+                    "DELETE",
+                    null,
+                    "Normal subscription stopped successfully!",
+                    "#normal_stop"
+                );
+            });
+        }
+
+        function changePort() {
+            if (!validateForm('port_form')) return;
+            const port = $("#hysteria_port").val();
+            const baseUrl = "{{ url_for('set_port_api', port='PORT_PLACEHOLDER') }}";
+            const url = baseUrl.replace("PORT_PLACEHOLDER", port);
+            confirmAction("change the port", function () {
+                sendRequest(url, "GET", null, "Port changed successfully!", "#port_change");
+            });
+        }
+
+        function changeSNI() {
+            if (!validateForm('sni_form')) return;
+            const domain = $("#sni_domain").val();
+            const baseUrl = "{{ url_for('set_sni_api', sni='SNI_PLACEHOLDER') }}";
+            const url = baseUrl.replace("SNI_PLACEHOLDER", domain);
+            confirmAction("change the SNI", function () {
+                sendRequest(url, "GET", null, "SNI changed successfully!", "#sni_change");
+            });
+        }
+
+        function saveIP() {
+            if (!validateForm('change_ip_form')) return;
+            const ipv4 = $("#ipv4").val().trim() || null;
+            const ipv6 = $("#ipv6").val().trim() || null;
+            confirmAction("save the new IP settings", function () {
+                sendRequest(
+                    "{{ url_for('edit_ip_api') }}",
+                    "POST",
+                    { ipv4: ipv4, ipv6: ipv6 },
+                    "IP settings saved successfully!",
+                    "#ip_change"
+                );
+            });
+        }
+
+        function downloadBackup() {
+            window.location.href = "{{ url_for('backup_api') }}";
+             Swal.fire("Starting Download", "Your backup download should start shortly.", "info");
+        }
+
+        function uploadBackup() {
+            var fileInput = document.getElementById('backup_file');
+            var file = fileInput.files[0];
+
+            if (!file) {
+                Swal.fire("Error!", "Please select a file to upload.", "error");
+                return;
+            }
+            if (!file.name.toLowerCase().endsWith('.zip')) {
+               Swal.fire("Error!", "Only .zip files are allowed for restore.", "error");
+               return;
+            }
+
+            confirmAction(`restore the system from the selected backup file (${file.name})`, function() {
+                var formData = new FormData();
+                formData.append('file', file);
+
+                var progressBar = document.getElementById('backup_progress_bar');
+                var progressContainer = progressBar.parentElement;
+                var statusDiv = document.getElementById('backup_status');
+
+                progressContainer.style.display = 'block';
+                progressBar.style.width = '0%';
+                progressBar.setAttribute('aria-valuenow', 0);
+                statusDiv.innerText = 'Uploading...';
+                statusDiv.className = 'mt-2';
+
+                $.ajax({
+                    url: "{{ url_for('restore_api') }}",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function(evt) {
+                            if (evt.lengthComputable) {
+                                var percentComplete = Math.round((evt.loaded / evt.total) * 100);
+                                progressBar.style.width = percentComplete + '%';
+                                progressBar.setAttribute('aria-valuenow', percentComplete);
+                                statusDiv.innerText = `Uploading... ${percentComplete}%`;
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function(response) {
+                        progressBar.style.width = '100%';
+                        progressBar.classList.add('bg-success');
+                        statusDiv.innerText = 'Backup restored successfully! Reloading page...';
+                        statusDiv.className = 'mt-2 text-success';
+                        Swal.fire("Success!", "Backup restored successfully!", "success").then(() => {
+                                location.reload();
+                        });
+                        console.log("Restore Success:", response);
+                    },
+                    error: function(xhr, status, error) {
+                        progressBar.classList.add('bg-danger');
+                        let detail = (xhr.responseJSON && xhr.responseJSON.detail) ? xhr.responseJSON.detail : 'Check console for details.';
+                        statusDiv.innerText = `Error restoring backup: ${detail}`;
+                        statusDiv.className = 'mt-2 text-danger';
+                        Swal.fire("Error!", `Failed to restore backup. ${detail}`, "error");
+                        console.error("Restore Error:", status, error, xhr.responseText);
+                    },
+                    complete: function() {
+                       fileInput.value = '';
+                    }
+                });
+            });
+        }
+
+        function startIPLimit() {
+             confirmAction("start the IP Limit service", function () {
+                sendRequest(
+                    "{{ url_for('start_ip_limit_api') }}",
+                    "POST",
+                    null,
+                    "IP Limit service started successfully!",
+                    "#ip_limit_start"
+                );
+            });
+        }
+
+        function stopIPLimit() {
+             confirmAction("stop the IP Limit service", function () {
+                sendRequest(
+                    "{{ url_for('stop_ip_limit_api') }}",
+                    "POST",
+                    null,
+                    "IP Limit service stopped successfully!",
+                    "#ip_limit_stop"
+                );
+            });
+        }
+
+        function configIPLimit() {
+            if (!validateForm('ip_limit_config_form')) return;
+            const blockDuration = $("#block_duration").val();
+            const maxIps = $("#max_ips").val();
+             confirmAction("save the IP Limit configuration", function () {
+                sendRequest(
+                    "{{ url_for('config_ip_limit_api') }}",
+                    "POST",
+                    { block_duration: parseInt(blockDuration), max_ips: parseInt(maxIps) },
+                    "IP Limit configuration saved successfully!",
+                    "#ip_limit_change_config",
+                    false,
+                    fetchIpLimitConfig
+                );
+            });
+        }
+
+        function fetchWarpFullStatusAndConfig() {
+            $.ajax({
+                url: "{{ url_for('status_warp') }}",
+                type: "GET",
+                success: function (data) {
+                    $("#warp_all_traffic").prop('checked', data.all_traffic_via_warp || false);
+                    $("#warp_popular_sites").prop('checked', data.popular_sites_via_warp || false);
+                    $("#warp_domestic_sites").prop('checked', data.domestic_sites_via_warp || false);
+                    $("#warp_block_adult_sites").prop('checked', data.block_adult_content || false);
+
+                    $("#warp_initial_controls").hide();
+                    $("#warp_active_controls").show();
+                },
+                error: function (xhr, status, error) {
+                    let errorMsg = "Failed to fetch WARP configuration.";
+                     if (xhr.responseJSON && xhr.responseJSON.detail) {
+                        errorMsg = xhr.responseJSON.detail;
+                    }
+                    console.error("Error fetching WARP config:", errorMsg, xhr.responseText);
+
+                    if (xhr.status === 404) { 
+                        $("#warp_initial_controls").show();
+                        $("#warp_active_controls").hide();
+                        if ($("#warp_config_form").length > 0) {
+                           $("#warp_config_form")[0].reset();
+                        }
+                        Swal.fire("Info", "WARP service might not be fully configured. Please try reinstalling if issues persist.", "info");
+                    } else {
+                         if ($("#warp_config_form").length > 0) {
+                           $("#warp_config_form")[0].reset();
+                        }
+                         Swal.fire("Warning", "Could not load current WARP configuration values. Please check manually or re-save.", "warning");
+                    }
+                }
+            });
+        }
+
+        $("#warp_start_btn").on("click", function() {
+            confirmAction("install and start WARP", function () {
+                sendRequest(
+                    "{{ url_for('install_warp') }}",
+                    "POST",
+                    null,
+                    "WARP installation request sent. The page will reload.",
+                    "#warp_start_btn",
+                    true
+                );
+            });
+        });
+
+        $("#warp_stop_btn").on("click", function() {
+            confirmAction("stop and uninstall WARP", function () {
+                sendRequest(
+                    "{{ url_for('uninstall_warp') }}",
+                    "DELETE",
+                    null,
+                    "WARP uninstallation request sent. The page will reload.",
+                    "#warp_stop_btn",
+                    true
+                );
+            });
+        });
+
+        $("#warp_save_config_btn").on("click", function() {
+            const configData = {
+                all: $("#warp_all_traffic").is(":checked"),
+                popular_sites: $("#warp_popular_sites").is(":checked"),
+                domestic_sites: $("#warp_domestic_sites").is(":checked"),
+                block_adult_sites: $("#warp_block_adult_sites").is(":checked")
+            };
+            confirmAction("save WARP configuration", function () {
+                sendRequest(
+                    "{{ url_for('configure_warp') }}",
+                    "POST",
+                    configData,
+                    "WARP configuration saved successfully!",
+                    "#warp_save_config_btn",
+                    false,
+                    fetchWarpFullStatusAndConfig
+                );
+            });
+        });
+
+        $("#telegram_start").on("click", startTelegram);
+        $("#telegram_stop").on("click", stopTelegram);
+        $("#normal_start").on("click", startNormal);
+        $("#normal_stop").on("click", stopNormal);
+        $("#normal_subpath_save_btn").on("click", editNormalSubPath);
+        $("#port_change").on("click", changePort);
+        $("#sni_change").on("click", changeSNI);
+        $("#ip_change").on("click", saveIP);
+        $("#download_backup").on("click", downloadBackup);
+        $("#upload_backup").on("click", uploadBackup);
+        $("#ip_limit_start").on("click", startIPLimit);
+        $("#ip_limit_stop").on("click", stopIPLimit);
+        $("#ip_limit_change_config").on("click", configIPLimit);
+        $("#decoy_setup").on("click", setupDecoy);
+        $("#decoy_stop").on("click", stopDecoy);
+        $("#obfs_enable_btn").on("click", enableObfs);
+        $("#obfs_disable_btn").on("click", disableObfs);
+        $("#add_node_btn").on("click", addNode);
+        $("#nodes_table").on("click", ".delete-node-btn", function() {
+            const nodeName = $(this).data("name");
+            deleteNode(nodeName);
+        });
+        $("#add_extra_config_btn").on("click", addExtraConfig);
+        $("#extra_configs_table").on("click", ".delete-extra-config-btn", function() {
+            const configName = $(this).data("name");
+            deleteExtraConfig(configName);
+        });
+
+        $('#normal_domain, #sni_domain, #decoy_domain').on('input', function () {
+            if (isValidDomain($(this).val())) {
+                $(this).removeClass('is-invalid');
+            } else if ($(this).val().trim() !== "") {
+                $(this).addClass('is-invalid');
+            } else {
+                 $(this).removeClass('is-invalid');
+            }
+        });
+
+        $('#normal_port, #hysteria_port').on('input', function () {
+             if (isValidPort($(this).val())) {
+                $(this).removeClass('is-invalid');
+            } else if ($(this).val().trim() !== "") {
+                $(this).addClass('is-invalid');
+            } else {
+                 $(this).removeClass('is-invalid');
+            }
+        });
+
+        $('#normal_subpath_input').on('input', function () {
+             if (isValidSubPath($(this).val())) {
+                $(this).removeClass('is-invalid');
+            } else if ($(this).val().trim() !== "") {
+                $(this).addClass('is-invalid');
+            } else {
+                 $(this).removeClass('is-invalid');
+            }
+        });
+
+        $('#ipv4, #ipv6, #node_ip').on('input', function () {
+            const isLocalIpField = $(this).attr('id') === 'ipv4' || $(this).attr('id') === 'ipv6';
+            if (isLocalIpField && $(this).val().trim() === '') {
+                 $(this).removeClass('is-invalid');
+            } else if (isValidIPorDomain($(this).val())) {
+                 $(this).removeClass('is-invalid');
+            } else {
+                $(this).addClass('is-invalid');
+            }
+        });
+        
+        $('#node_name, #extra_config_name').on('input', function() {
+            if ($(this).val().trim() !== "") {
+                $(this).removeClass('is-invalid');
+            } else {
+                $(this).addClass('is-invalid');
+            }
+        });
+
+        $('#extra_config_uri').on('input', function () {
+            if (isValidURI($(this).val())) {
+                $(this).removeClass('is-invalid');
+            } else if ($(this).val().trim() !== "") {
+                $(this).addClass('is-invalid');
+            }
+        });
+
+        $('#telegram_api_token, #telegram_admin_id').on('input', function () {
+            if ($(this).val().trim() !== "") {
+                $(this).removeClass('is-invalid');
+            } else {
+                 $(this).addClass('is-invalid');
+            }
+        });
+         $('#block_duration, #max_ips').on('input', function () {
+            if (isValidPositiveNumber($(this).val())) {
+                $(this).removeClass('is-invalid');
+            } else if ($(this).val().trim() !== "") {
+                $(this).addClass('is-invalid');
+            } else {
+                 $(this).removeClass('is-invalid');
+            }
+        });
+
+        $('#decoy_path').on('input', function () {
+            if (isValidPath($(this).val())) {
+                $(this).removeClass('is-invalid');
+            } else if ($(this).val().trim() !== "") {
+                $(this).addClass('is-invalid');
+            } else { 
+                 $(this).addClass('is-invalid');
+            }
+        });
+
+    });
+</script>
+{% endblock %}

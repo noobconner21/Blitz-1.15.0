@@ -1,0 +1,801 @@
+{% extends "base.html" %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Users <small class="font-weight-light"></small></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">User List {% if users %}({{ users|length }}){% endif %}</h3>
+                <div class="card-tools d-flex align-items-center flex-wrap">
+
+                    <div class="mr-2 mb-2">
+                        <button type="button" class="btn btn-sm btn-default filter-button" data-filter="all">
+                            <i class="fas fa-list"></i> All
+                        </button>
+                    </div>
+                    <div class="mr-2 mb-2">
+                        <button type="button" class="btn btn-sm btn-default filter-button" data-filter="not-active">
+                            <i class="fas fa-exclamation-triangle"></i> NA
+                        </button>
+                    </div>
+                    <div class="mr-2 mb-2">
+                        <button type="button" class="btn btn-sm btn-success filter-button" data-filter="enable">
+                            <i class="fas fa-check"></i> Enable
+                        </button>
+                    </div>
+                    <div class="mr-2 mb-2">
+                        <button type="button" class="btn btn-sm btn-danger filter-button" data-filter="disable">
+                            <i class="fas fa-ban"></i> Disable
+                        </button>
+                    </div>
+
+                    <div class="input-group input-group-sm" style="width: 200px;">
+                        <input type="text" id="searchInput" class="form-control float-right" placeholder="Search">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-default" id="searchButton">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#addUserModal">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger ml-2" id="deleteSelected">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body table-responsive p-0">
+                {% if users|length == 0 %}
+                <div class="alert alert-warning" role="alert" style="margin: 20px;">
+                    No users found.
+                </div>
+                {% else %}
+                <table class="table table-bordered table-hover" id="userTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="selectAll">
+                            </th>
+                            <th>#</th>
+                            <th>Status</th>
+                            <th>Username</th>
+                            <th>Traffic Usage</th>
+                            <th class="text-nowrap">Expiry Date</th>
+                            <th class="text-nowrap">Expiry Days</th>
+                            <th>Enable</th>
+                            <th class="text-nowrap requires-iplimit-service" style="display: none;">Unlimited IP</th>
+                            <th class="text-nowrap">Configs</th>
+                            <th class="text-nowrap">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users|sort(attribute='username', case_sensitive=false) %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="user-checkbox" value="{{ user['username'] }}">
+                            </td>
+                            <td>{{ loop.index }}</td>
+                            <td>
+                                {% if user['status'] == "Online" %}
+                                <i class="fas fa-circle text-success"></i> Online
+                                {% elif user['status'] == "Offline" %}
+                                <i class="fas fa-circle text-secondary"></i> Offline
+                                {% else %}
+                                <i class="fas fa-circle text-danger"></i> {{ user['status'] }}
+                                {% endif %}
+                            </td>
+                            <td data-username="{{ user['username'] }}">{{ user['username'] }}</td>
+                            <td>{{ user['traffic_used'] }}</td>
+                            <td>{{ user['expiry_date'] }}</td>
+                            <td>{{ user['expiry_days'] }}</td>
+                            <td>
+                                {% if user['enable'] %}
+                                <i class="fas fa-check-circle text-success"></i>
+                                {% else %}
+                                <i class="fas fa-times-circle text-danger"></i>
+                                {% endif %}
+                            </td>
+                            <td class="unlimited-ip-cell requires-iplimit-service" style="display: none;">
+                                {% if user['unlimited_ip'] %}
+                                <i class="fas fa-shield-alt text-primary"></i>
+                                {% else %}
+                                <i class="fas fa-times-circle text-muted"></i>
+                                {% endif %}
+                            </td>
+                            <td class="text-nowrap">
+                                <a href="#" class="config-link" data-toggle="modal" data-target="#qrcodeModal"
+                                    data-username="{{ user['username'] }}">
+                                    <i class="fas fa-qrcode"></i>
+                                </a>
+                            </td>
+                            <td class="text-nowrap">
+                                <button type="button" class="btn btn-sm btn-info edit-user"
+                                    data-user="{{ user['username'] }}" data-toggle="modal"
+                                    data-target="#editUserModal">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-warning reset-user"
+                                    data-user="{{ user['username'] }}">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger delete-user"
+                                    data-user="{{ user['username'] }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+                <div class="row mt-3">
+                    <div class="col-sm-12 col-md-7">
+                        <div class="dataTables_paginate paging_simple_numbers" id="userTable_paginate">
+                            {# {{ pagination.links }} #}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="form-group">
+                        <label for="addUsername">Username</label>
+                        <input type="text" class="form-control" id="addUsername" name="username" required>
+                        <small class="form-text text-danger" id="addUsernameError"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="addTrafficLimit">Traffic Limit (GB)</label>
+                        <input type="number" class="form-control" id="addTrafficLimit" name="traffic_limit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addExpirationDays">Expiration Days</label>
+                        <input type="number" class="form-control" id="addExpirationDays" name="expiration_days"
+                            required>
+                    </div>
+                    <div class="form-check mb-3 requires-iplimit-service" style="display: none;">
+                        <input type="checkbox" class="form-check-input" id="addUnlimited" name="unlimited">
+                        <label class="form-check-label" for="addUnlimited">Unlimited IP (Exempt from IP limit checks)</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="addSubmitButton">Add User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <div class="form-group">
+                        <label for="editUsername">Username</label>
+                        <input type="text" class="form-control" id="editUsername" name="new_username">
+                        <small class="form-text text-danger" id="editUsernameError"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTrafficLimit">Traffic Limit (GB)</label>
+                        <input type="number" class="form-control" id="editTrafficLimit" name="new_traffic_limit">
+                    </div>
+                    <div class="form-group">
+                        <label for="editExpirationDays">Expiration Days</label>
+                        <input type="number" class="form-control" id="editExpirationDays" name="new_expiration_days">
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="editBlocked" name="blocked">
+                        <label class="form-check-label" for="editBlocked">Blocked</label>
+                    </div>
+                    <div class="form-check mb-3 requires-iplimit-service" style="display: none;">
+                        <input type="checkbox" class="form-check-input" id="editUnlimitedIp" name="unlimited_ip">
+                        <label class="form-check-label" for="editUnlimitedIp">Unlimited IP (Exempt from IP limit checks)</label>
+                    </div>
+                    <input type="hidden" id="originalUsername" name="username">
+                    <button type="submit" class="btn btn-primary" id="editSubmitButton">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- QR Code Modal -->
+<div class="modal fade" id="qrcodeModal" tabindex="-1" role="dialog" aria-labelledby="qrcodeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qrcodeModalLabel">QR Codes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <div id="qrcodesContainer" class="mx-auto"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<!-- Include qr-code-styling library -->
+<script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(function () {
+        
+        function checkIpLimitServiceStatus() {
+            fetch('{{ url_for("server_services_status_api") }}')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.hysteria_iplimit === true) {
+                        $('.requires-iplimit-service').show();
+                    }
+                })
+                .catch(error => console.error('Error fetching IP limit service status:', error));
+        }
+
+        checkIpLimitServiceStatus();
+
+        const usernameRegex = /^[a-zA-Z0-9]+$/;
+
+        function validateUsername(username, errorElementId) {
+            const isValid = usernameRegex.test(username);
+            const errorElement = $("#" + errorElementId);
+
+            if (!isValid) {
+                errorElement.text("Usernames can only contain letters and numbers.");
+                return false;
+            } else {
+                errorElement.text("");
+                return true;
+            }
+        }
+
+        $("#addSubmitButton").prop("disabled", true);
+
+        $("#addUsername").on("input", function () {
+            const username = $(this).val();
+            const isValid = validateUsername(username, "addUsernameError");
+            $("#addUserForm button[type='submit']").prop("disabled", !isValid);
+            $("#addSubmitButton").prop("disabled", !isValid);
+        });
+
+        $("#editUsername").on("input", function () {
+            const username = $(this).val();
+            const isValid = validateUsername(username, "editUsernameError");
+            $("#editUserForm button[type='submit']").prop("disabled", !isValid);
+            $("#editSubmitButton").prop("disabled", !isValid);
+        });
+
+        $(".filter-button").on("click", function () {
+            const filter = $(this).data("filter");
+
+            $("#selectAll").prop("checked", false);
+
+            $("#userTable tbody tr").each(function () {
+                let showRow = true;
+                
+                switch (filter) {
+                    case "all":
+                        showRow = true;
+                        break;
+                    case "not-active":
+                        showRow = $(this).find("td:eq(2) i").hasClass("text-danger");
+                        break;
+                    case "enable":
+                        showRow = $(this).find("td:eq(7) i").hasClass("text-success");
+                        break;
+                    case "disable":
+                        showRow = $(this).find("td:eq(7) i").hasClass("text-danger");
+                        break;
+                }
+
+                if (showRow) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+                $(this).find(".user-checkbox").prop("checked", false);
+            });
+        });
+
+        $("#selectAll").on("change", function () {
+            $("#userTable tbody tr:visible .user-checkbox").prop("checked", $(this).prop("checked"));
+        });
+
+        $("#deleteSelected").on("click", function () {
+            const selectedUsers = $(".user-checkbox:checked").map(function () {
+                return $(this).val();
+            }).get();
+
+            if (selectedUsers.length === 0) {
+                Swal.fire({
+                    title: "Warning!",
+                    text: "Please select at least one user to delete.",
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: "Are you sure?",
+                html: `This will delete the selected users: <b>${selectedUsers.join(", ")}</b>.<br>This action cannot be undone!`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete them!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Promise.all(selectedUsers.map(username => {
+                        const removeUserUrl = "{{ url_for('remove_user_api', username='USERNAME_PLACEHOLDER') }}";
+                        const url = removeUserUrl.replace("USERNAME_PLACEHOLDER", encodeURIComponent(username));
+                        return $.ajax({
+                            url: url,
+                            method: "DELETE",
+                            contentType: "application/json",
+                            data: JSON.stringify({ username: username }),
+                        });
+                    }))
+                        .then(responses => {
+                            const allSuccessful = responses.every(response => response.detail);
+                            if (allSuccessful) {
+                                Swal.fire({
+                                    title: "Success!",
+                                    text: "Selected users deleted successfully!",
+                                    icon: "success",
+                                    confirmButtonText: "OK",
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Error!",
+                                    text: "Failed to delete some users.",
+                                    icon: "error",
+                                    confirmButtonText: "OK",
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error deleting users:", error);
+                            Swal.fire({
+                                title: "Error!",
+                                text: "An error occurred while deleting users.",
+                                icon: "error",
+                                confirmButtonText: "OK",
+                            });
+                        });
+                }
+            });
+        });
+
+        $("#addUserForm").on("submit", function (e) {
+            e.preventDefault();
+            if (!validateUsername($("#addUsername").val(), "addUsernameError")) {
+                $("#addSubmitButton").prop("disabled", true);
+                return;
+            }
+            $("#addSubmitButton").prop("disabled", true);
+
+            const jsonData = {
+                username: $("#addUsername").val(),
+                traffic_limit: $("#addTrafficLimit").val(),
+                expiration_days: $("#addExpirationDays").val(),
+                unlimited: $("#addUnlimited").is(":checked")
+            };
+
+            $.ajax({
+                url: " {{ url_for('add_user_api') }} ",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                    Swal.fire({
+                        title: "Success!",
+                        text: response.detail || "User added successfully!",
+                        icon: "success",
+                        confirmButtonText: "OK",
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    let errorMessage = "An error occurred while adding user.";
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.detail) {
+                        errorMessage = jqXHR.responseJSON.detail;
+                    } else if (jqXHR.status === 409) {
+                        errorMessage = "User '" + jsonData.username + "' already exists.";
+                         $("#addUsernameError").text(errorMessage);
+                    } else if (jqXHR.status === 422) {
+                        errorMessage = jqXHR.responseJSON.detail || "Invalid input provided.";
+                    }
+                    Swal.fire({
+                        title: "Error!",
+                        text: errorMessage,
+                        icon: "error",
+                        confirmButtonText: "OK",
+                    });
+                    $("#addSubmitButton").prop("disabled", false);
+                }
+            });
+        });
+
+        $(document).on("click", ".edit-user", function () {
+            const username = $(this).data("user");
+            const row = $(this).closest("tr");
+            const trafficUsageText = row.find("td:eq(4)").text().trim();
+            const expiryDaysText = row.find("td:eq(6)").text().trim();
+            const blocked = row.find("td:eq(7) i").hasClass("text-danger");
+            const unlimited_ip = row.find(".unlimited-ip-cell i").hasClass("text-primary");
+        
+            const expiryDaysValue = (expiryDaysText.toLowerCase() === 'unlimited') ? 0 : parseInt(expiryDaysText, 10);
+            
+            let trafficLimitValue = 0;
+            if (!trafficUsageText.toLowerCase().includes('/unlimited')) {
+                const parts = trafficUsageText.split('/');
+                if (parts.length > 1) {
+                    const limitPart = parts[1].trim();
+                    const match = limitPart.match(/^[\d.]+/);
+                    if (match) {
+                        trafficLimitValue = parseFloat(match[0]);
+                    }
+                }
+            }
+        
+            $("#originalUsername").val(username);
+            $("#editUsername").val(username);
+            $("#editTrafficLimit").val(trafficLimitValue);
+            $("#editExpirationDays").val(expiryDaysValue);
+            $("#editBlocked").prop("checked", blocked);
+            $("#editUnlimitedIp").prop("checked", unlimited_ip);
+        
+            const isValid = validateUsername(username, "editUsernameError");
+            $("#editUserForm button[type='submit']").prop("disabled", !isValid);
+        });
+
+        $("#editUserForm").on("submit", function (e) {
+            e.preventDefault();
+            if (!validateUsername($("#editUsername").val(), "editUsernameError")) {
+                return;
+            }
+            $("#editSubmitButton").prop("disabled", true);
+            
+            const jsonData = {
+                new_username: $("#editUsername").val(),
+                new_traffic_limit: $("#editTrafficLimit").val() || null,
+                new_expiration_days: $("#editExpirationDays").val() || null,
+                blocked: $("#editBlocked").is(":checked"),
+                unlimited_ip: $("#editUnlimitedIp").is(":checked")
+            };
+
+            if (jsonData.new_username === $("#originalUsername").val()) {
+                delete jsonData.new_username;
+            }
+
+            const editUserUrl = "{{ url_for('edit_user_api', username='USERNAME_PLACEHOLDER') }}";
+            const url = editUserUrl.replace("USERNAME_PLACEHOLDER", encodeURIComponent($("#originalUsername").val()));
+
+            $.ajax({
+                url: url,
+                method: "PATCH",
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                    if (response && response.detail) {
+                        $("#editUserModal").modal("hide");
+                        Swal.fire({
+                            title: "Success!",
+                            text: response.detail,
+                            icon: "success",
+                            confirmButtonText: "OK",
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        $("#editUserModal").modal("hide");
+                        Swal.fire({
+                            title: "Error!",
+                            text: (response && response.error) || "An unknown error occurred.",
+                            icon: "error",
+                            confirmButtonText: "OK",
+                        });
+                        $("#editSubmitButton").prop("disabled", false);
+                    }
+                },
+                error: function (jqXHR) {
+                    let errorMessage = "An error occurred while updating user.";
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.detail) {
+                        errorMessage = jqXHR.responseJSON.detail;
+                    }
+                    Swal.fire({
+                        title: "Error!",
+                        text: errorMessage,
+                        icon: "error",
+                        confirmButtonText: "OK",
+                    });
+                    $("#editSubmitButton").prop("disabled", false);
+                }
+            });
+        });
+
+        // Reset User Button Click
+        $("#userTable").on("click", ".reset-user", function () {
+            const username = $(this).data("user");
+
+            Swal.fire({
+                title: "Are you sure?",
+                html: `This will reset <b>${username}</b>'s data.<br>This action cannot be undone!`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, reset it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const resetUserUrl = "{{ url_for('reset_user_api', username='USERNAME_PLACEHOLDER') }}";
+                    const url = resetUserUrl.replace("USERNAME_PLACEHOLDER", encodeURIComponent(username));
+                    $.ajax({
+                        url: url,
+                        method: "GET",
+                        contentType: "application/json",
+                        data: JSON.stringify({ username: username }),
+                        success: function (response) {
+                            if (response.detail) {
+                                Swal.fire({
+                                    title: "Success!",
+                                    text: response.detail,
+                                    icon: "success",
+                                    confirmButtonText: "OK",
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Error!",
+                                    text: response.error || "Failed to reset user",
+                                    icon: "error",
+                                    confirmButtonText: "OK",
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                title: "Error!",
+                                text: "An error occurred while resetting user",
+                                icon: "error",
+                                confirmButtonText: "OK",
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        // Delete User Button Click
+        $("#userTable").on("click", ".delete-user", function () {
+            const username = $(this).data("user");
+
+            Swal.fire({
+                title: "Are you sure?",
+                html: `This will delete the user <b>${username}</b>.<br>This action cannot be undone!`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const removeUserUrl = "{{ url_for('remove_user_api', username='USERNAME_PLACEHOLDER') }}";
+                    const url = removeUserUrl.replace("USERNAME_PLACEHOLDER", encodeURIComponent(username));
+                    $.ajax({
+                        url: url,
+                        method: "DELETE",
+                        contentType: "application/json",
+                        data: JSON.stringify({ username: username }),
+                        success: function (response) {
+                            if (response.detail) {
+                                Swal.fire({
+                                    title: "Success!",
+                                    text: response.detail,
+                                    icon: "success",
+                                    confirmButtonText: "OK",
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Error!",
+                                    text: response.error || "Failed to delete user",
+                                    icon: "error",
+                                    confirmButtonText: "OK",
+                            });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                title: "Error!",
+                                text: "An error occurred while deleting user",
+                                icon: "error",
+                                confirmButtonText: "OK",
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        // QR Code Modal
+        $("#qrcodeModal").on("show.bs.modal", function (event) {
+            const button = $(event.relatedTarget);
+            const username = button.data("username");
+            const qrcodesContainer = $("#qrcodesContainer");
+            qrcodesContainer.empty();
+
+            const userUriApiUrl = "{{ url_for('show_user_uri_api', username='USERNAME_PLACEHOLDER') }}";
+            const url = userUriApiUrl.replace("USERNAME_PLACEHOLDER", encodeURIComponent(username));
+
+            $.ajax({
+                url: url,
+                method: "GET",
+                dataType: 'json',
+                success: function (response) {
+                    const configs = [
+                        { type: "IPv4", link: response.ipv4 },
+                        { type: "IPv6", link: response.ipv6 },
+                        { type: "Normal-SUB", link: response.normal_sub }
+                    ];
+
+                    configs.forEach(config => {
+                        if (config.link) {
+                            const displayType = config.type;
+                            const configLink = config.link;
+                            const qrCodeId = `qrcode-${displayType}-${Math.random().toString(36).substring(2, 10)}`;
+
+                            const card = $(`
+                                <div class="card d-inline-block my-2">
+                                    <div class="card-body">
+                                        <div id="${qrCodeId}" class="mx-auto cursor-pointer"></div>
+                                        <br>
+                                        <div class="config-type-text mt-2 text-center">${displayType}</div>
+                                    </div>
+                                </div>
+                            `);
+                            qrcodesContainer.append(card);
+
+                            const qrCodeStyling = new QRCodeStyling({
+                                width: 180,
+                                height: 180,
+                                data: configLink,
+                                margin: 5,
+                                dotsOptions: {
+                                    color: "#212121",
+                                    type: "square"
+                                },
+                                cornersSquareOptions: {
+                                    color: "#212121",
+                                    type: "square"
+                                },
+                                backgroundOptions: {
+                                    color: "#FAFAFA",
+                                },
+                                imageOptions: {
+                                    hideBackgroundDots: true,
+                                }
+                            });
+                            qrCodeStyling.append(document.getElementById(qrCodeId));
+
+                            card.on("click", function () {
+                                navigator.clipboard.writeText(configLink)
+                                    .then(() => {
+                                        Swal.fire({
+                                            icon: "success",
+                                            title: displayType + " link copied!",
+                                            showConfirmButton: false,
+                                            timer: 1500,
+                                        });
+                                    })
+                                    .catch(err => {
+                                        console.error("Failed to copy link: ", err);
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Failed to copy link",
+                                            text: "Please copy manually.",
+                                        });
+                                    });
+                            });
+                        }
+                    });
+
+
+                },
+                error: function (error) {
+                    console.error("Error fetching user URI:", error);
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to fetch user configuration URIs.",
+                        icon: "error",
+                        confirmButtonText: "OK",
+                    });
+                }
+            });
+
+
+        });
+
+        $("#qrcodeModal .modal-content").on("click", function (e) {
+            e.stopPropagation();
+        });
+
+        $("#qrcodeModal").on("hidden.bs.modal", function () {
+            $("#qrcodesContainer").empty();
+        });
+
+        $("#qrcodeModal .close").on("click", function () {
+            $("#qrcodeModal").modal("hide");
+        });
+
+        function filterUsers() {
+            const searchText = $("#searchInput").val().toLowerCase();
+
+            $("#userTable tbody tr").each(function () {
+                const username = $(this).find("td:eq(3)").text().toLowerCase();
+                if (username.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        $('#addUserModal').on('show.bs.modal', function (event) {
+            $('#addUserForm')[0].reset();
+            $('#addUsernameError').text('');
+            $('#addTrafficLimit').val('30');
+            $('#addExpirationDays').val('30');
+            $('#addSubmitButton').prop('disabled', true);
+        });
+
+        $("#searchButton").on("click", filterUsers);
+        $("#searchInput").on("keyup", filterUsers);
+
+    });
+</script>
+{% endblock %}
