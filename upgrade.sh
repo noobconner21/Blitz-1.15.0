@@ -6,7 +6,7 @@ trap 'echo -e "\n❌ An error occurred. Aborting."; exit 1' ERR
 # ========== Variables ==========
 HYSTERIA_INSTALL_DIR="/etc/hysteria"
 HYSTERIA_VENV_DIR="$HYSTERIA_INSTALL_DIR/hysteria2_venv"
-REPO_URL="https://github.com/ReturnFI/Blitz"
+REPO_URL="https://github.com/noobconner21/Blitz-1.15.0"
 REPO_BRANCH="main"
 GEOSITE_URL="https://raw.githubusercontent.com/Chocolate4U/Iran-v2ray-rules/release/geosite.dat"
 GEOIP_URL="https://raw.githubusercontent.com/Chocolate4U/Iran-v2ray-rules/release/geoip.dat"

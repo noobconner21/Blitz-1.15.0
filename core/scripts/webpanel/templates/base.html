@@ -122,23 +122,23 @@
         <!-- Footer -->
         <footer class="main-footer">
             <div class="d-flex align-items-center">
-                <a href="https://github.com/ReturnFI/Blitz" target="_blank" rel="noopener noreferrer" class="text-decoration-none mr-3">
+                <a href="https://github.com/noobconner21/Blitz-1.15.0" target="_blank" rel="noopener noreferrer" class="text-decoration-none mr-3">
                     <i class="fab fa-github"></i> GitHub
                 </a>
                 <a href="https://t.me/hysteria2_panel" target="_blank" rel="noopener noreferrer" class="text-decoration-none mr-3">
                     <i class="fab fa-telegram-plane"></i> Telegram
                 </a>
-                <!-- <a href="https://github.com/ReturnFI/Blitz/releases" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+                <!-- <a href="https://github.com/noobconner21/Blitz-1.15.0/releases" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
                     <i class="fas fa-code-branch"></i> <span id="panel-version">Loading version...</span>
                 </a> -->
                 <div class="ml-auto">
-                    <a href="https://github.com/ReturnFI/Blitz/releases" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+                    <a href="https://github.com/noobconner21/Blitz-1.15.0/releases" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
                         <i class="fas fa-code-branch"></i> <span id="panel-version">Loading version...</span>
                     </a>
                 </div>
             </div>
         </footer>
-    </div> 
+    </div>
 
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
@@ -178,7 +178,7 @@
                     $(".card").removeClass("bg-dark");
                 }
             }
-    
+
             function updateIcon(enabled) {
                 darkModeIcon.removeClass("fa-moon fa-sun")
                     .addClass(enabled ? "fa-sun" : "fa-moon");
@@ -197,7 +197,7 @@
                 }
             });
 
-            const checkVersionUrl = "{{ url_for('check_version_info') }}"; 
+            const checkVersionUrl = "{{ url_for('check_version_info') }}";
             $.ajax({
                 url: checkVersionUrl,
                 type: 'GET',

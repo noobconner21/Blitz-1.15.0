@@ -47,7 +47,7 @@ check_os_version() {
     local os_name os_version
 
     log_info "Checking OS compatibility..."
-    
+
     if [ -f /etc/os-release ]; then
         os_name=$(grep '^ID=' /etc/os-release | cut -d= -f2)
         os_version=$(grep '^VERSION_ID=' /etc/os-release | cut -d= -f2 | tr -d '"')
@@ -78,9 +78,9 @@ check_os_version() {
 install_packages() {
     local REQUIRED_PACKAGES=("jq" "curl" "pwgen" "python3" "python3-pip" "python3-venv" "git" "bc" "zip" "cron" "lsof")
     local MISSING_PACKAGES=()
-    
+
     log_info "Checking required packages..."
-    
+
     for package in "${REQUIRED_PACKAGES[@]}"; do
         if ! command -v "$package" &> /dev/null; then
             MISSING_PACKAGES+=("$package")
@@ -93,7 +93,7 @@ install_packages() {
         log_info "Installing missing packages: ${MISSING_PACKAGES[*]}"
         apt update -qq &> /dev/null || { log_error "Failed to update apt repositories"; exit 1; }
         apt upgrade -y -qq &> /dev/null || { log_warning "Failed to upgrade packages, continuing..."; }
-        
+
         for package in "${MISSING_PACKAGES[@]}"; do
             log_info "Installing $package..."
             if apt install -y -qq "$package" &> /dev/null; then
@@ -110,7 +110,7 @@ install_packages() {
 
 clone_repository() {
     log_info "Cloning Blitz repository..."
-    
+
     if [ -d "/etc/hysteria" ]; then
         log_warning "Directory /etc/hysteria already exists."
         read -p "Do you want to remove it and clone again? (y/n): " -n 1 -r
@@ -122,8 +122,8 @@ clone_repository() {
             return 0
         fi
     fi
-    
-    if git clone https://github.com/ReturnFI/Blitz /etc/hysteria &> /dev/null; then
+
+    if git clone https://github.com/noobconner21/Blitz-1.15.0 /etc/hysteria &> /dev/null; then
         log_success "Repository cloned successfully"
     else
         log_error "Failed to clone repository"
@@ -133,18 +133,18 @@ clone_repository() {
 
 setup_python_env() {
     log_info "Setting up Python virtual environment..."
-    
+
     cd /etc/hysteria || { log_error "Failed to change to /etc/hysteria directory"; exit 1; }
-    
+
     if python3 -m venv hysteria2_venv &> /dev/null; then
         log_success "Created Python virtual environment"
     else
         log_error "Failed to create Python virtual environment"
         exit 1
     fi
-    
+
     source /etc/hysteria/hysteria2_venv/bin/activate || { log_error "Failed to activate virtual environment"; exit 1; }
-    
+
     log_info "Installing Python requirements..."
     if pip install -r requirements.txt &> /dev/null; then
         log_success "Installed Python requirements"
@@ -156,7 +156,7 @@ setup_python_env() {
 
 add_alias() {
     log_info "Adding 'hys2' alias to .bashrc..."
-    
+
     if ! grep -q "alias hys2='source /etc/hysteria/hysteria2_venv/bin/activate && /etc/hysteria/menu.sh'" ~/.bashrc; then
         echo "alias hys2='source /etc/hysteria/hysteria2_venv/bin/activate && /etc/hysteria/menu.sh'" >> ~/.bashrc
         log_success "Added 'hys2' alias to .bashrc"
@@ -167,10 +167,10 @@ add_alias() {
 
 run_menu() {
     log_info "Preparing to run menu..."
-    
+
     cd /etc/hysteria || { log_error "Failed to change to /etc/hysteria directory"; exit 1; }
     chmod +x menu.sh || { log_error "Failed to make menu.sh executable"; exit 1; }
-    
+
     log_info "Starting menu..."
     echo -e "\n${BOLD}${GREEN}======== Launching Blitz Menu ========${NC}\n"
     ./menu.sh
@@ -178,19 +178,19 @@ run_menu() {
 
 main() {
     echo -e "\n${BOLD}${BLUE}======== Blitz Setup Script ========${NC}\n"
-    
+
     check_root
     check_os_version
     install_packages
     clone_repository
     setup_python_env
     add_alias
-    
+
     source ~/.bashrc &> /dev/null || true
-    
+
     echo -e "\n${YELLOW}Starting Blitz in 3 seconds...${NC}"
     sleep 3
-    
+
     run_menu
 }
 
